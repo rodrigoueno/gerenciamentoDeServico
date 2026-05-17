@@ -15,7 +15,7 @@ namespace AlouCar.Dominio.Entidades
         public int Quilometragem { get; set; }
         public TipoVeiculo Tipo { get; set; }
         public DateTime DataCadastro { get; set; }
-        public DateTime? UltimaRevisao { get; private set; }
+        public DateTime UltimaRevisao { get; private set; }
         public bool Ativo { get; set; }
         public Cliente Cliente { get; set; }
 

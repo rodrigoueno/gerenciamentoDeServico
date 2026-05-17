@@ -2,7 +2,6 @@ namespace AlouCar.Dominio.Entidades
 {
     public class Cliente
     {
-        
         public int Id { get; set; }
         public string Nome { get; set; }
         public string Cpf { get; set; }
@@ -12,7 +11,6 @@ namespace AlouCar.Dominio.Entidades
         public DateTime DataCadastro { get; set; }
 
         public List<Veiculo> Veiculos { get; set; }
-
 
         public Cliente()
         {
@@ -25,6 +23,5 @@ namespace AlouCar.Dominio.Entidades
         {
             Ativo = false;
         }
-
     }
 }
