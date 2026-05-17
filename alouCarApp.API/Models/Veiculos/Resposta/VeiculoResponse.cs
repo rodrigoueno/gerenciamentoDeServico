@@ -1,8 +1,8 @@
 using AlouCar.Dominio.Enumeradores;
 
-namespace AlouCar.Dominio.Entidades
+namespace alouCarApp.API.Models.Veiculos.Resposta
 {
-    public class Veiculo
+    public class VeiculoResponse
     {
         public int Id { get; set; }
         public int ClienteId { get; set; }
@@ -14,20 +14,7 @@ namespace AlouCar.Dominio.Entidades
         public int AnoModelo { get; set; }
         public int Quilometragem { get; set; }
         public TipoVeiculo Tipo { get; set; }
-        public DateTime DataCadastro { get; set; }
-        public DateTime UltimaRevisao { get; private set; }
         public bool Ativo { get; set; }
-        public Cliente Cliente { get; set; }
-
-        public Veiculo()
-        {
-            Ativo = true;
-            DataCadastro = DateTime.Now;
-        }
-
-        public void Deletar()
-        {
-            Ativo = false;
-        }
+        public DateTime DataCadastro { get; set; }
     }
 }

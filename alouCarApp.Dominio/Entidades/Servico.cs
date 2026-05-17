@@ -9,12 +9,13 @@ namespace AlouCar.Dominio.Entidades
         public int VeiculoId { get; set; }
         public TipoServico TipoServico { get; set; }
         public DateTime DataAgendamento { get; set; }
-        public SituacaoServico Status { get; set; }
-        public decimal ValorTotal { get; set; }
+        public SituacaoServico Situacao { get; set; }
+        public decimal ValorPrevisto { get; set; }
         public DateTime DataCriacao { get; set; }
         public DateTime DataConclusao { get; set; }
         public Cliente Cliente { get; set; }
         public Veiculo Veiculo { get; set; }
+        public decimal ValorTotal { get; set; }
         public string Observacao { get; set; }
         public bool Ativo { get; set; }
 
@@ -22,12 +23,12 @@ namespace AlouCar.Dominio.Entidades
         {
             Ativo = true;
             DataCriacao = DateTime.Now;
-            Status = SituacaoServico.Agendado;
+            Situacao = SituacaoServico.Agendado;
         }
 
         public void Deletar()
         {
-            Status = SituacaoServico.Cancelado;
+            Situacao = SituacaoServico.Cancelado;
             Ativo = false;
         }
 
