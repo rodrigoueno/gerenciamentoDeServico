@@ -58,6 +58,10 @@ Configuracoes/
  ServicoConfiguracoes.cs
  VeiculoConfiguracoes.cs
 Contexto/AloucarContexto.cs
+Interfaces/
+ IClienteRepositorio.cs
+ IServicoRepositorio.cs
+ IVeiculoRepositorio.cs
 Migrations/
  20260517194540_Inicial.cs
  20260517194540_Inicial.Designer.cs
