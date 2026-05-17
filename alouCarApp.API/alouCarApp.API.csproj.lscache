@@ -38,7 +38,7 @@ TemporaryDependencyNodeTargetIdentifier=net8.0
 /warn:8
 /define:TRACE;DEBUG;NET;NET8_0;NETCOREAPP;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NETCOREAPP1_0_OR_GREATER;NETCOREAPP1_1_OR_GREATER;NETCOREAPP2_0_OR_GREATER;NETCOREAPP2_1_OR_GREATER;NETCOREAPP2_2_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER
 /highentropyva+
-/nullable:enable
+/nullable:disable
 /debug+
 /debug:portable
 /filealign:512
@@ -53,6 +53,25 @@ TemporaryDependencyNodeTargetIdentifier=net8.0
 /warnaserror+:NU1605,SYSLIB0011
 
 [sourceFiles]
+Controllers/
+ ClienteController.cs
+ ServicoController.cs
+ VeiculoCOntroller.cs
+Models/Clientes/Requisicao/
+ ClienteAtualizar.cs
+ ClienteCriar.cs
+Models/
+ Clientes/Resposta/ClienteResponse.cs
+ Servicos/Requisicao/
+  ServicoAtualizar.cs
+  ServicoCriar.cs
+ Servicos/Resposta/
+  ServicoResponse.cs
+  TiposResposta.cs
+ Veiculos/Requisicao/
+  VeiculoAtualziar.cs
+  VeiculoCriar.cs
+ Veiculos/Resposta/VeiculoResponse.cs
 obj/Debug/net8.0/
  .NETCoreApp,Version=v8.0.AssemblyAttributes.cs
  alouCarApp.API.AssemblyInfo.cs
