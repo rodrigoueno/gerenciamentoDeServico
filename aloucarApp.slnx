@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="alouCarApp.API/alouCarApp.API.csproj" />
+  <Project Path="alouCarApp.Aplicacao/alouCarApp.Aplicacao.csproj" />
+  <Project Path="alouCarApp.Dominio/alouCarApp.Dominio.csproj" />
+  <Project Path="alouCarApp.Repositorio/alouCarApp.Repositorio.csproj" />
+  <Project Path="alouCarApp.Servico/alouCarApp.Servico.csproj" />
+</Solution>
