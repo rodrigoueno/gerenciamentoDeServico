@@ -1,6 +1,7 @@
 using AlouCar.Aplicacao.Interfaces;
 using AlouCar.Dominio.Entidades;
 using AlouCar.Repositorio.Interfaces;
+using AlouCar.Dominio.Enumeradores;
 
 namespace AlouCar.Aplicacao.Aplicacoes
 {
@@ -41,7 +42,10 @@ namespace AlouCar.Aplicacao.Aplicacoes
             servicoDominio.ValorPrevisto = servico.ValorPrevisto;
             servicoDominio.ValorTotal = servico.ValorTotal;
             servicoDominio.Observacao = servico.Observacao;
-            servicoDominio.DataConclusao = servico.DataConclusao;
+
+            if (servico.Situacao == SituacaoServico.Concluido)
+                servicoDominio.Concluir();
+
             _servicoRepositorio.Atualizar(servicoDominio);
         }
 

@@ -18,5 +18,6 @@ namespace alouCarApp.API.Models.Servicos.Resposta
         public string Observacao { get; set; }
         public bool Ativo { get; set; }
         public DateTime DataCriacao { get; set; }
+        public DateTime? DataConclusao { get; set; }
     }
 }

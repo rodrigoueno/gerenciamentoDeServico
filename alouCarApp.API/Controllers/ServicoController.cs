@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using AlouCar.Aplicacao.Interfaces;
 using AlouCar.Dominio.Entidades;
 using alouCarApp.API.Models.Servicos.Resposta;
-using alouCarApp.API.Models;
+using alouCarApp.API.Models.Servicos;
 
 namespace alouCarApp.API.Controllers
 {
@@ -61,7 +61,8 @@ namespace alouCarApp.API.Controllers
                     ValorTotal = servicoDominio.ValorTotal,
                     Observacao = servicoDominio.Observacao,
                     Ativo = servicoDominio.Ativo,
-                    DataCriacao = servicoDominio.DataCriacao
+                    DataCriacao = servicoDominio.DataCriacao,
+                    DataConclusao = servicoDominio.DataConclusao
                 };
                 return Ok(servicoResposta);
             }
@@ -129,21 +130,20 @@ namespace alouCarApp.API.Controllers
             }
         }
 
-        [HttpPut("Atualizar")]
-        public IActionResult Atualizar([FromBody] ServicoAtualizar servicoAtualizar)
+        [HttpPut("Atualizar/{servicoId}")]
+        public IActionResult Atualizar([FromRoute] int servicoId, [FromBody] ServicoAtualizar servicoAtualizar)
         {
             try
             {
                 var servicoDominio = new Servico
                 {
-                    Id = servicoAtualizar.Id,
+                    Id = servicoId,
                     TipoServico = servicoAtualizar.TipoServico,
                     DataAgendamento = servicoAtualizar.DataAgendamento,
                     Situacao = servicoAtualizar.Situacao,
                     ValorPrevisto = servicoAtualizar.ValorPrevisto,
                     ValorTotal = servicoAtualizar.ValorTotal,
-                    Observacao = servicoAtualizar.Observacao,
-                    DataConclusao = servicoAtualizar.DataConclusao
+                    Observacao = servicoAtualizar.Observacao
                 };
                 _servicoAplicacao.Atualizar(servicoDominio);
                 return Ok();

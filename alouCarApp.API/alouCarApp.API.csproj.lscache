@@ -56,7 +56,7 @@ TemporaryDependencyNodeTargetIdentifier=net8.0
 Controllers/
  ClienteController.cs
  ServicoController.cs
- VeiculoCOntroller.cs
+ VeiculoController.cs
 Models/Clientes/Requisicao/
  ClienteAtualizar.cs
  ClienteCriar.cs
@@ -77,6 +77,7 @@ obj/Debug/net8.0/
  alouCarApp.API.AssemblyInfo.cs
  alouCarApp.API.GlobalUsings.g.cs
 Program.cs
+Services/BasicSend.cs
 
 [metadataReferences]
 ../
@@ -407,6 +408,7 @@ Program.cs
   WindowsBase.dll
  microsoft.openapi/1.6.14/lib/netstandard2.0/Microsoft.OpenApi.dll
  microsoft.sqlserver.server/1.0.0/lib/netstandard2.0/Microsoft.SqlServer.Server.dll
+ resend/0.5.1/lib/net8.0/Resend.dll
  swashbuckle.aspnetcore.swagger/6.6.2/lib/net8.0/Swashbuckle.AspNetCore.Swagger.dll
  swashbuckle.aspnetcore.swaggergen/6.6.2/lib/net8.0/Swashbuckle.AspNetCore.SwaggerGen.dll
  swashbuckle.aspnetcore.swaggerui/6.6.2/lib/net8.0/Swashbuckle.AspNetCore.SwaggerUI.dll

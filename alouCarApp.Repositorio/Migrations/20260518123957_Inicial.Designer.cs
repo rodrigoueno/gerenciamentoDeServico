@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace alouCarApp.Repositorio.Migrations
 {
     [DbContext(typeof(AlouCarContexto))]
-    [Migration("20260517194540_Inicial")]
+    [Migration("20260518123957_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -91,7 +91,7 @@ namespace alouCarApp.Repositorio.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("DataAgendamento");
 
-                    b.Property<DateTime>("DataConclusao")
+                    b.Property<DateTime?>("DataConclusao")
                         .HasColumnType("datetime2")
                         .HasColumnName("DataConclusao");
 
@@ -195,7 +195,7 @@ namespace alouCarApp.Repositorio.Migrations
                         .HasColumnType("int")
                         .HasColumnName("Tipo");
 
-                    b.Property<DateTime>("UltimaRevisao")
+                    b.Property<DateTime?>("UltimaRevisao")
                         .HasColumnType("datetime2")
                         .HasColumnName("UltimaRevisao");
 

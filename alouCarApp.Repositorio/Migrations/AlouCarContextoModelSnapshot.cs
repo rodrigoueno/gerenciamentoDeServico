@@ -88,7 +88,7 @@ namespace alouCarApp.Repositorio.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("DataAgendamento");
 
-                    b.Property<DateTime>("DataConclusao")
+                    b.Property<DateTime?>("DataConclusao")
                         .HasColumnType("datetime2")
                         .HasColumnName("DataConclusao");
 
@@ -192,7 +192,7 @@ namespace alouCarApp.Repositorio.Migrations
                         .HasColumnType("int")
                         .HasColumnName("Tipo");
 
-                    b.Property<DateTime>("UltimaRevisao")
+                    b.Property<DateTime?>("UltimaRevisao")
                         .HasColumnType("datetime2")
                         .HasColumnName("UltimaRevisao");
 

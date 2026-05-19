@@ -1,10 +1,9 @@
 using AlouCar.Dominio.Enumeradores;
 
-namespace alouCarApp.API.Models
+namespace alouCarApp.API.Models.Veiculos
 {
     public class VeiculoAtualizar
     {
-        public int Id { get; set; }
         public string Placa { get; set; }
         public string Marca { get; set; }
         public string Modelo { get; set; }

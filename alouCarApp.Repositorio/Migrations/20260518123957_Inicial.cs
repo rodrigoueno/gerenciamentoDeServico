@@ -45,7 +45,7 @@ namespace alouCarApp.Repositorio.Migrations
                     Quilometragem = table.Column<int>(type: "int", nullable: false),
                     Tipo = table.Column<int>(type: "int", nullable: false),
                     DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UltimaRevisao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UltimaRevisao = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Ativo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -72,7 +72,7 @@ namespace alouCarApp.Repositorio.Migrations
                     Situacao = table.Column<int>(type: "int", nullable: false),
                     ValorPrevisto = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
                     DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataConclusao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataConclusao = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ValorTotal = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
                     Observacao = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     Ativo = table.Column<bool>(type: "bit", nullable: false)
