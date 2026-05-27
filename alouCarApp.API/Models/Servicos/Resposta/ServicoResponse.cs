@@ -10,7 +10,7 @@ namespace alouCarApp.API.Models.Servicos.Resposta
         public int VeiculoId { get; set; }
         public string ModeloVeiculo { get; set; }
         public string PlacaVeiculo { get; set; }
-        public TipoServico TipoServico { get; set; }
+        
         public DateTime DataAgendamento { get; set; }
         public SituacaoServico Situacao { get; set; }
         public decimal ValorPrevisto { get; set; }
@@ -18,5 +18,8 @@ namespace alouCarApp.API.Models.Servicos.Resposta
         public string Observacao { get; set; }
         public bool Ativo { get; set; }
         public DateTime DataCriacao { get; set; }
+        public DateTime? DataConclusao { get; set; }
+        
+        public List<ServicoItemResposta> Itens { get; set; } = new();
     }
 }

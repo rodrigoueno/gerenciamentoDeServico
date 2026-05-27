@@ -1,6 +1,6 @@
 using AlouCar.Dominio.Enumeradores;
 
-namespace alouCarApp.API.Models
+namespace alouCarApp.API.Models.Veiculos
 {
     public class VeiculoCriar
     {

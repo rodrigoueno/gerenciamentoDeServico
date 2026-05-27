@@ -1,4 +1,4 @@
-namespace alouCarApp.API.Models
+namespace alouCarApp.API.Models.Clientes
 {
     public class ClienteCriar
     {

@@ -45,7 +45,7 @@ namespace alouCarApp.Repositorio.Migrations
                     Quilometragem = table.Column<int>(type: "int", nullable: false),
                     Tipo = table.Column<int>(type: "int", nullable: false),
                     DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UltimaRevisao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UltimaRevisao = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Ativo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -67,12 +67,11 @@ namespace alouCarApp.Repositorio.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClienteId = table.Column<int>(type: "int", nullable: false),
                     VeiculoId = table.Column<int>(type: "int", nullable: false),
-                    TipoServico = table.Column<int>(type: "int", nullable: false),
                     DataAgendamento = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Situacao = table.Column<int>(type: "int", nullable: false),
                     ValorPrevisto = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
                     DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataConclusao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataConclusao = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ValorTotal = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
                     Observacao = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     Ativo = table.Column<bool>(type: "bit", nullable: false)
@@ -94,6 +93,33 @@ namespace alouCarApp.Repositorio.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ServicoItens",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ServicoId = table.Column<int>(type: "int", nullable: false),
+                    KilometragemNaRevisao = table.Column<int>(type: "int", nullable: false),
+                    TipoServico = table.Column<int>(type: "int", nullable: false),
+                    Valor = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServicoItens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ServicoItens_Servicos_ServicoId",
+                        column: x => x.ServicoId,
+                        principalTable: "Servicos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ServicoItens_ServicoId",
+                table: "ServicoItens",
+                column: "ServicoId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Servicos_ClienteId",
                 table: "Servicos",
@@ -113,6 +139,9 @@ namespace alouCarApp.Repositorio.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ServicoItens");
+
             migrationBuilder.DropTable(
                 name: "Servicos");
 

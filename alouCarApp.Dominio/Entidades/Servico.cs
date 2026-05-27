@@ -7,17 +7,18 @@ namespace AlouCar.Dominio.Entidades
         public int Id { get; set; }
         public int ClienteId { get; set; }
         public int VeiculoId { get; set; }
-        public TipoServico TipoServico { get; set; }
         public DateTime DataAgendamento { get; set; }
         public SituacaoServico Situacao { get; set; }
         public decimal ValorPrevisto { get; set; }
         public DateTime DataCriacao { get; set; }
-        public DateTime DataConclusao { get; set; }
+        public DateTime? DataConclusao { get; set; }
         public Cliente Cliente { get; set; }
         public Veiculo Veiculo { get; set; }
         public decimal ValorTotal { get; set; }
         public string Observacao { get; set; }
         public bool Ativo { get; set; }
+
+        public List<ServicoItem> Itens { get; set; } = new();
 
         public Servico()
         {
@@ -26,11 +27,21 @@ namespace AlouCar.Dominio.Entidades
             Situacao = SituacaoServico.Agendado;
         }
 
+        public void Concluir()
+        {
+            Situacao = SituacaoServico.Concluido;
+            DataConclusao = DateTime.Now;
+        }
+
+        public void Iniciar()
+        {
+            Situacao = SituacaoServico.EmAndamento;
+        }
+
         public void Deletar()
         {
             Situacao = SituacaoServico.Cancelado;
             Ativo = false;
         }
-
     }
 }

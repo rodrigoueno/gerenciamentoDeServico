@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using AlouCar.Aplicacao.Interfaces;
 using AlouCar.Dominio.Entidades;
 using alouCarApp.API.Models.Veiculos.Resposta;
-using alouCarApp.API.Models;
+using alouCarApp.API.Models.Veiculos;
 
 namespace alouCarApp.API.Controllers
 {
@@ -129,14 +129,14 @@ namespace alouCarApp.API.Controllers
             }
         }
 
-        [HttpPut("Atualizar")]
-        public IActionResult Atualizar([FromBody] VeiculoAtualizar veiculoAtualizar)
+        [HttpPut("Atualizar/{veiculoId}")]
+        public IActionResult Atualizar([FromRoute] int veiculoId, [FromBody] VeiculoAtualizar veiculoAtualizar)
         {
             try
             {
                 var veiculoDominio = new Veiculo
                 {
-                    Id = veiculoAtualizar.Id,
+                    Id = veiculoId,
                     Placa = veiculoAtualizar.Placa,
                     Marca = veiculoAtualizar.Marca,
                     Modelo = veiculoAtualizar.Modelo,

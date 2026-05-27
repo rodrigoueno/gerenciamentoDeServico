@@ -18,7 +18,9 @@ namespace AlouCar.Aplicacao.Aplicacoes
         public int Criar(Veiculo veiculo)
         {
             if (veiculo == null)
+            {
                 throw new Exception("Veículo não pode ser vazio");
+            }
 
             ValidarInformacaoVeiculo(veiculo);
             ValidarCliente(veiculo.ClienteId);
@@ -27,28 +29,53 @@ namespace AlouCar.Aplicacao.Aplicacoes
 
         public void Atualizar(Veiculo veiculo)
         {
-            var veiculoDominio = _veiculoRepositorio.ObterPorId(veiculo.Id).Result;
-            if (veiculoDominio == null)
+            var veiculoAtualizar = _veiculoRepositorio.ObterPorId(veiculo.Id).Result;
+            if (veiculoAtualizar == null)
                 throw new Exception("Veículo não encontrado");
 
-            ValidarInformacaoVeiculo(veiculo);
-            veiculoDominio.Placa = veiculo.Placa;
-            veiculoDominio.Marca = veiculo.Marca;
-            veiculoDominio.Modelo = veiculo.Modelo;
-            veiculoDominio.Cor = veiculo.Cor;
-            veiculoDominio.AnoFabricacao = veiculo.AnoFabricacao;
-            veiculoDominio.AnoModelo = veiculo.AnoModelo;
-            veiculoDominio.Quilometragem = veiculo.Quilometragem;
-            veiculoDominio.Tipo = veiculo.Tipo;
-            _veiculoRepositorio.Atualizar(veiculoDominio);
+            if (!string.IsNullOrEmpty(veiculo.Placa))
+            {
+                veiculoAtualizar.Placa = veiculo.Placa;
+            }
+            if (!string.IsNullOrEmpty(veiculo.Marca))
+            {
+                veiculoAtualizar.Marca = veiculo.Marca;
+            }
+            if (!string.IsNullOrEmpty(veiculo.Modelo))
+            {
+                veiculoAtualizar.Modelo = veiculo.Modelo;
+            }
+            if (!string.IsNullOrEmpty(veiculo.Cor))
+            {
+                veiculoAtualizar.Cor = veiculo.Cor;
+            }
+            if (veiculo.AnoFabricacao > 0)
+            {
+                veiculoAtualizar.AnoFabricacao = veiculo.AnoFabricacao;
+            }
+            if (veiculo.AnoModelo > 0)
+            {
+                veiculoAtualizar.AnoModelo = veiculo.AnoModelo;
+            }
+            if (veiculo.Quilometragem > 0)
+            {
+                veiculoAtualizar.Quilometragem = veiculo.Quilometragem;
+            }
+            if (veiculo.Tipo != default)
+            {
+                veiculoAtualizar.Tipo = veiculo.Tipo;
+            }
+            _veiculoRepositorio.Atualizar(veiculoAtualizar);
         }
 
         public async Task<Veiculo> ObterPorId(int id)
         {
-            var veiculoDominio = await _veiculoRepositorio.ObterPorId(id);
-            if (veiculoDominio == null)
+            var veiculoObter = await _veiculoRepositorio.ObterPorId(id);
+            if (veiculoObter == null)
+            {
                 throw new Exception("Veículo não encontrado");
-            return veiculoDominio;
+            }
+            return veiculoObter;
         }
 
         public async Task<List<Veiculo>> Listar(bool ativo)
@@ -63,35 +90,52 @@ namespace AlouCar.Aplicacao.Aplicacoes
 
         public async Task<bool> Excluir(Veiculo veiculo)
         {
-            var veiculoDominio = await _veiculoRepositorio.ObterPorId(veiculo.Id);
-            if (veiculoDominio == null)
+            var veiculoExcluir = await _veiculoRepositorio.ObterPorId(veiculo.Id);
+            if (veiculoExcluir == null)
+            {
                 throw new Exception("Veículo não encontrado");
+            }
 
-            return await _veiculoRepositorio.Excluir(veiculoDominio);
+            return await _veiculoRepositorio.Excluir(veiculoExcluir);
+
         }
 
         #region Util
-        private static void ValidarInformacaoVeiculo(Veiculo veiculo)
+        public static void ValidarInformacaoVeiculo(Veiculo veiculo)
         {
             if (string.IsNullOrEmpty(veiculo.Placa))
+            {
                 throw new Exception("Placa não pode ser vazia");
+            }
             if (string.IsNullOrEmpty(veiculo.Marca))
+            {
                 throw new Exception("Marca não pode ser vazia");
+            }
             if (string.IsNullOrEmpty(veiculo.Modelo))
+            {
                 throw new Exception("Modelo não pode ser vazio");
+            }
             if (veiculo.AnoFabricacao <= 0)
+            {
                 throw new Exception("Ano de fabricação inválido");
+            }
             if (veiculo.AnoModelo <= 0)
+            {
                 throw new Exception("Ano do modelo inválido");
+            }
         }
 
-        private void ValidarCliente(int clienteId)
+        public async void ValidarCliente(int clienteId)
         {
-            var cliente = _clienteRepositorio.Obter(clienteId);
+            var cliente = await _clienteRepositorio.Obter(clienteId);
             if (cliente == null)
+            {
                 throw new Exception($"Cliente {clienteId} não encontrado");
+            }
             if (!cliente.Ativo)
+            {
                 throw new Exception($"Cliente {clienteId} está inativo");
+            }
         }
         #endregion
     }
