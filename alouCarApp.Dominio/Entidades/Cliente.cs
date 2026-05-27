@@ -23,5 +23,6 @@ namespace AlouCar.Dominio.Entidades
         {
             Ativo = false;
         }
+
     }
 }

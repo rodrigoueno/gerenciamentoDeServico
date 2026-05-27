@@ -87,7 +87,7 @@ namespace alouCarApp.API.Controllers
         }
 
         [HttpPut("Atualizar/{clienteId}")]
-        public IActionResult Atualizar([FromRoute] int clienteId, [FromBody] ClienteAtualizar clienteAtualizar)
+        public async Task<IActionResult> Atualizar([FromRoute] int clienteId, [FromBody] ClienteAtualizar clienteAtualizar)
         {
             try
             {
@@ -99,7 +99,7 @@ namespace alouCarApp.API.Controllers
                     Email = clienteAtualizar.Email,
                     Telefone = clienteAtualizar.Telefone
                 };
-                _clienteAplicacao.Atualizar(clienteDominio);
+                await _clienteAplicacao.Atualizar(clienteDominio); // ✅ await
                 return Ok();
             }
             catch (Exception ex)

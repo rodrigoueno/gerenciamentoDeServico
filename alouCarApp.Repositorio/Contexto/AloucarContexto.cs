@@ -9,6 +9,7 @@ namespace AlouCar.Repositorio.Contexto
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Veiculo> Veiculos { get; set; }
         public DbSet<Servico> Servicos { get; set; }
+        public DbSet<ServicoItem> ServicoItens { get; set; }
 
         public AlouCarContexto() { }
 
@@ -27,6 +28,7 @@ namespace AlouCar.Repositorio.Contexto
             modelBuilder.ApplyConfiguration(new ClienteConfiguracoes());
             modelBuilder.ApplyConfiguration(new VeiculoConfiguracoes());
             modelBuilder.ApplyConfiguration(new ServicoConfiguracoes());
+            modelBuilder.ApplyConfiguration(new ServicoItemConfiguracoes()); // <- novo
         }
     }
 }

@@ -18,20 +18,24 @@ namespace alouCarApp.API.Controllers
         }
 
         [HttpPost("Criar")]
-        public IActionResult Criar([FromBody] ServicoCriar servicoCriar)
+        public async Task<IActionResult> Criar([FromBody] ServicoCriar servicoCriar)
         {
             try
             {
-                var servicoDominio = new Servico
+                var servico = new Servico
                 {
                     ClienteId = servicoCriar.ClienteId,
                     VeiculoId = servicoCriar.VeiculoId,
-                    TipoServico = servicoCriar.TipoServico,
                     DataAgendamento = servicoCriar.DataAgendamento,
-                    ValorPrevisto = servicoCriar.ValorPrevisto,
-                    Observacao = servicoCriar.Observacao
+                    Observacao = servicoCriar.Observacao,
+                    Itens = servicoCriar.Itens.Select(i => new ServicoItem
+                    {
+                        TipoServico = i.TipoServico,
+                        Valor = i.Valor
+                    }).ToList()
                 };
-                var servicoId = _servicoAplicacao.Criar(servicoDominio);
+
+                var servicoId = await _servicoAplicacao.Criar(servico);
                 return Ok(servicoId);
             }
             catch (Exception ex)
@@ -45,24 +49,29 @@ namespace alouCarApp.API.Controllers
         {
             try
             {
-                var servicoDominio = await _servicoAplicacao.ObterPorId(servicoId);
+                var servicoObter = await _servicoAplicacao.ObterPorId(servicoId);
                 var servicoResposta = new ServicoResponse
                 {
-                    Id = servicoDominio.Id,
-                    ClienteId = servicoDominio.ClienteId,
-                    NomeCliente = servicoDominio.Cliente?.Nome,
-                    VeiculoId = servicoDominio.VeiculoId,
-                    ModeloVeiculo = servicoDominio.Veiculo?.Modelo,
-                    PlacaVeiculo = servicoDominio.Veiculo?.Placa,
-                    TipoServico = servicoDominio.TipoServico,
-                    DataAgendamento = servicoDominio.DataAgendamento,
-                    Situacao = servicoDominio.Situacao,
-                    ValorPrevisto = servicoDominio.ValorPrevisto,
-                    ValorTotal = servicoDominio.ValorTotal,
-                    Observacao = servicoDominio.Observacao,
-                    Ativo = servicoDominio.Ativo,
-                    DataCriacao = servicoDominio.DataCriacao,
-                    DataConclusao = servicoDominio.DataConclusao
+                    Id = servicoObter.Id,
+                    ClienteId = servicoObter.ClienteId,
+                    NomeCliente = servicoObter.Cliente?.Nome,
+                    VeiculoId = servicoObter.VeiculoId,
+                    ModeloVeiculo = servicoObter.Veiculo?.Modelo,
+                    PlacaVeiculo = servicoObter.Veiculo?.Placa,
+                    Itens = servicoObter.Itens?.Select(i => new ServicoItemResposta
+                    {
+                        Id = i.Id,
+                        TipoServico = i.TipoServico,
+                        Valor = i.Valor
+                    }).ToList() ?? new(),
+                    DataAgendamento = servicoObter.DataAgendamento,
+                    Situacao = servicoObter.Situacao,
+                    ValorPrevisto = servicoObter.ValorPrevisto,
+                    ValorTotal = servicoObter.ValorTotal,
+                    Observacao = servicoObter.Observacao,
+                    Ativo = servicoObter.Ativo,
+                    DataCriacao = servicoObter.DataCriacao,
+                    DataConclusao = servicoObter.DataConclusao
                 };
                 return Ok(servicoResposta);
             }
@@ -77,8 +86,8 @@ namespace alouCarApp.API.Controllers
         {
             try
             {
-                var servicosDominio = await _servicoAplicacao.Listar(ativo);
-                var servicos = servicosDominio.Select(s => new ServicoResponse
+                var servicosListar = await _servicoAplicacao.Listar(ativo);
+                var servicos = servicosListar.Select(s => new ServicoResponse
                 {
                     Id = s.Id,
                     ClienteId = s.ClienteId,
@@ -86,7 +95,12 @@ namespace alouCarApp.API.Controllers
                     VeiculoId = s.VeiculoId,
                     ModeloVeiculo = s.Veiculo?.Modelo,
                     PlacaVeiculo = s.Veiculo?.Placa,
-                    TipoServico = s.TipoServico,
+                    Itens = s.Itens?.Select(i => new ServicoItemResposta
+                    {
+                        Id = i.Id,
+                        TipoServico = i.TipoServico,
+                        Valor = i.Valor
+                    }).ToList() ?? new(),
                     DataAgendamento = s.DataAgendamento,
                     Situacao = s.Situacao,
                     ValorPrevisto = s.ValorPrevisto,
@@ -115,7 +129,12 @@ namespace alouCarApp.API.Controllers
                     VeiculoId = s.VeiculoId,
                     ModeloVeiculo = s.Veiculo?.Modelo,
                     PlacaVeiculo = s.Veiculo?.Placa,
-                    TipoServico = s.TipoServico,
+                    Itens = s.Itens?.Select(i => new ServicoItemResposta
+                    {
+                        Id = i.Id,
+                        TipoServico = i.TipoServico,
+                        Valor = i.Valor
+                    }).ToList() ?? new(),
                     DataAgendamento = s.DataAgendamento,
                     Situacao = s.Situacao,
                     ValorPrevisto = s.ValorPrevisto,
@@ -131,21 +150,37 @@ namespace alouCarApp.API.Controllers
         }
 
         [HttpPut("Atualizar/{servicoId}")]
-        public IActionResult Atualizar([FromRoute] int servicoId, [FromBody] ServicoAtualizar servicoAtualizar)
+        public async Task<IActionResult> Atualizar([FromRoute] int servicoId, [FromBody] ServicoAtualizar servicoAtualizar)
         {
             try
             {
-                var servicoDominio = new Servico
+                var servico = new Servico
                 {
                     Id = servicoId,
-                    TipoServico = servicoAtualizar.TipoServico,
                     DataAgendamento = servicoAtualizar.DataAgendamento,
                     Situacao = servicoAtualizar.Situacao,
-                    ValorPrevisto = servicoAtualizar.ValorPrevisto,
                     ValorTotal = servicoAtualizar.ValorTotal,
                     Observacao = servicoAtualizar.Observacao
                 };
-                _servicoAplicacao.Atualizar(servicoDominio);
+                await _servicoAplicacao.Atualizar(servico);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            // catch (Exception ex)
+            // {
+            //     return BadRequest(ex.Message);
+            // }
+        }
+
+        [HttpPut("AtualizarSituacao/{servicoId}")]
+        public IActionResult AtualizarSituacao([FromRoute] int servicoId, [FromBody] ServicoAtualizarSituacao model)
+        {
+            try
+            {
+                _servicoAplicacao.AtualizarSituacao(servicoId, model.Situacao);
                 return Ok();
             }
             catch (Exception ex)
@@ -159,8 +194,8 @@ namespace alouCarApp.API.Controllers
         {
             try
             {
-                var servicoDominio = await _servicoAplicacao.ObterPorId(servicoId);
-                await _servicoAplicacao.Excluir(servicoDominio);
+                var servicoExcluir = await _servicoAplicacao.ObterPorId(servicoId);
+                await _servicoAplicacao.Excluir(servicoExcluir);
                 return Ok();
             }
             catch (Exception ex)

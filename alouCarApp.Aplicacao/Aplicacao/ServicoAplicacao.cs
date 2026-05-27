@@ -18,43 +18,70 @@ namespace AlouCar.Aplicacao.Aplicacoes
             _veiculoRepositorio = veiculoRepositorio;
         }
 
-        public int Criar(Servico servico)
+        public async Task<int> Criar(Servico servico)
         {
             if (servico == null)
+            {
                 throw new Exception("Serviço não pode ser vazio");
+            }
+            if (servico.Itens == null || !servico.Itens.Any())
+            {
+                throw new Exception("O serviço deve ter ao menos um item");
+            }
+            if (servico.Itens.Any(i => i.Valor <= 0))
+            {
+                throw new Exception("Todos os itens devem ter valor maior que zero");
+            }
+
+            servico.ValorPrevisto = servico.Itens.Sum(i => i.Valor);
 
             ValidarInformacaoServico(servico);
-            ValidarCliente(servico.ClienteId);
+            await ValidarCliente(servico.ClienteId);
             ValidarVeiculo(servico.VeiculoId, servico.ClienteId).Wait();
+
             return _servicoRepositorio.Criar(servico);
         }
 
-        public void Atualizar(Servico servico)
+        public async Task Atualizar(Servico servico)
         {
-            var servicoDominio = _servicoRepositorio.ObterPorId(servico.Id).Result;
-            if (servicoDominio == null)
+            var servicoAtualizar = await _servicoRepositorio.ObterPorId(servico.Id);
+
+            if (servicoAtualizar == null)
+            {
                 throw new Exception("Serviço não encontrado");
-
-            ValidarInformacaoServico(servico);
-            servicoDominio.TipoServico = servico.TipoServico;
-            servicoDominio.DataAgendamento = servico.DataAgendamento;
-            servicoDominio.Situacao = servico.Situacao;
-            servicoDominio.ValorPrevisto = servico.ValorPrevisto;
-            servicoDominio.ValorTotal = servico.ValorTotal;
-            servicoDominio.Observacao = servico.Observacao;
-
+            }
+            if (servico.DataAgendamento != default)
+            {
+                servicoAtualizar.DataAgendamento = servico.DataAgendamento;
+            }
+            if (servico.ValorTotal > 0)
+            {
+                servicoAtualizar.ValorTotal = servico.ValorTotal;
+            }
+            if (!string.IsNullOrEmpty(servico.Observacao))
+            {
+                servicoAtualizar.Observacao = servico.Observacao;
+            }
+            if (servico.Situacao != default)
+            {
+                servicoAtualizar.Situacao = servico.Situacao;
+            }
             if (servico.Situacao == SituacaoServico.Concluido)
-                servicoDominio.Concluir();
+            {
+                servicoAtualizar.Concluir();
+            }
 
-            _servicoRepositorio.Atualizar(servicoDominio);
+            _servicoRepositorio.Atualizar(servicoAtualizar);
         }
 
         public async Task<Servico> ObterPorId(int id)
         {
-            var servicoDominio = await _servicoRepositorio.ObterPorId(id);
-            if (servicoDominio == null)
+            var servicoObter = await _servicoRepositorio.ObterPorId(id);
+            if (servicoObter == null)
+            {
                 throw new Exception("Serviço não encontrado");
-            return servicoDominio;
+            }
+            return servicoObter;
         }
 
         public async Task<List<Servico>> Listar(bool ativo)
@@ -69,40 +96,80 @@ namespace AlouCar.Aplicacao.Aplicacoes
 
         public async Task<bool> Excluir(Servico servico)
         {
-            var servicoDominio = await _servicoRepositorio.ObterPorId(servico.Id);
-            if (servicoDominio == null)
+            if (servico == null)
+            {
                 throw new Exception("Serviço não encontrado");
+            }
 
-            return await _servicoRepositorio.Excluir(servicoDominio);
+            return await _servicoRepositorio.Excluir(servico);
+        }
+
+        public void AtualizarSituacao(int id, SituacaoServico situacao)
+        {
+            var servicoSituacao = _servicoRepositorio.ObterPorId(id).Result;
+
+            if (servicoSituacao == null)
+                throw new Exception("Serviço não encontrado");
+            switch (situacao)
+            {
+                case SituacaoServico.EmAndamento:
+                    servicoSituacao.Iniciar();
+                    break;
+
+                case SituacaoServico.Concluido:
+                    servicoSituacao.Concluir();
+                    break;
+
+                case SituacaoServico.Cancelado:
+                    throw new Exception("Para cancelar um serviço utilize o endpoint de exclusão");
+
+                default:
+                    throw new Exception($"Situação '{situacao}' inválida para atualização");
+            }
+            _servicoRepositorio.Atualizar(servicoSituacao);
         }
 
         #region Util
-        private static void ValidarInformacaoServico(Servico servico)
+        public static void ValidarInformacaoServico(Servico servico)
         {
             if (servico.DataAgendamento == default)
-                throw new Exception("Data de agendamento não pode ser vazia");
+            {
+                throw new Exception("A data não pode ser vazia!");
+            }
             if (servico.ValorPrevisto <= 0)
-                throw new Exception("Valor previsto deve ser maior que zero");
+            {
+                throw new Exception("O valor deve ser maior que zero!");
+            }
         }
 
-        private void ValidarCliente(int clienteId)
+        public async Task ValidarCliente(int clienteId)
         {
-            var cliente = _clienteRepositorio.Obter(clienteId);
+            var cliente = await _clienteRepositorio.Obter(clienteId);
             if (cliente == null)
+            {
                 throw new Exception($"Cliente {clienteId} não encontrado");
+            }
             if (!cliente.Ativo)
+            {
                 throw new Exception($"Cliente {clienteId} está inativo");
+            }
         }
 
-        private async Task ValidarVeiculo(int veiculoId, int clienteId)
+        public async Task ValidarVeiculo(int veiculoId, int clienteId)
         {
             var veiculo = await _veiculoRepositorio.ObterPorId(veiculoId);
             if (veiculo == null)
+            {
                 throw new Exception($"Veículo {veiculoId} não encontrado");
+            }
             if (!veiculo.Ativo)
+            {
                 throw new Exception($"Veículo {veiculoId} está inativo");
+            }
             if (veiculo.ClienteId != clienteId)
+            {
                 throw new Exception($"Veículo {veiculoId} não pertence ao cliente {clienteId}");
+            }
         }
         #endregion
     }

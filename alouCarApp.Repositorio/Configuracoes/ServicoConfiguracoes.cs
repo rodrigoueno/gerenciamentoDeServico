@@ -13,7 +13,6 @@ namespace AlouCar.Repositorio.Configuracoes
             builder.Property(nameof(Servico.Id)).HasColumnName("Id").IsRequired();
             builder.Property(nameof(Servico.ClienteId)).HasColumnName("ClienteId").IsRequired();
             builder.Property(nameof(Servico.VeiculoId)).HasColumnName("VeiculoId").IsRequired();
-            builder.Property(nameof(Servico.TipoServico)).HasColumnName("TipoServico").IsRequired();
             builder.Property(nameof(Servico.DataAgendamento)).HasColumnName("DataAgendamento").IsRequired();
             builder.Property(nameof(Servico.Situacao)).HasColumnName("Situacao").IsRequired();
             builder.Property(nameof(Servico.ValorPrevisto)).HasColumnName("ValorPrevisto").HasPrecision(10, 2);

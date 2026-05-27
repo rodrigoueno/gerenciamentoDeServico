@@ -105,10 +105,6 @@ namespace alouCarApp.Repositorio.Migrations
                         .HasColumnType("int")
                         .HasColumnName("Situacao");
 
-                    b.Property<int>("TipoServico")
-                        .HasColumnType("int")
-                        .HasColumnName("TipoServico");
-
                     b.Property<decimal>("ValorPrevisto")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)")
@@ -130,6 +126,40 @@ namespace alouCarApp.Repositorio.Migrations
                     b.HasIndex("VeiculoId");
 
                     b.ToTable("Servicos", (string)null);
+                });
+
+            modelBuilder.Entity("AlouCar.Dominio.Entidades.ServicoItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("Id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("KilometragemNaRevisao")
+                        .IsRequired()
+                        .HasColumnType("int")
+                        .HasColumnName("KilometragemNaRevisao");
+
+                    b.Property<int>("ServicoId")
+                        .HasColumnType("int")
+                        .HasColumnName("ServicoId");
+
+                    b.Property<int>("TipoServico")
+                        .HasColumnType("int")
+                        .HasColumnName("TipoServico");
+
+                    b.Property<decimal>("Valor")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)")
+                        .HasColumnName("Valor");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ServicoId");
+
+                    b.ToTable("ServicoItens", (string)null);
                 });
 
             modelBuilder.Entity("AlouCar.Dominio.Entidades.Veiculo", b =>
@@ -222,6 +252,17 @@ namespace alouCarApp.Repositorio.Migrations
                     b.Navigation("Veiculo");
                 });
 
+            modelBuilder.Entity("AlouCar.Dominio.Entidades.ServicoItem", b =>
+                {
+                    b.HasOne("AlouCar.Dominio.Entidades.Servico", "Servico")
+                        .WithMany("Itens")
+                        .HasForeignKey("ServicoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Servico");
+                });
+
             modelBuilder.Entity("AlouCar.Dominio.Entidades.Veiculo", b =>
                 {
                     b.HasOne("AlouCar.Dominio.Entidades.Cliente", "Cliente")
@@ -236,6 +277,11 @@ namespace alouCarApp.Repositorio.Migrations
             modelBuilder.Entity("AlouCar.Dominio.Entidades.Cliente", b =>
                 {
                     b.Navigation("Veiculos");
+                });
+
+            modelBuilder.Entity("AlouCar.Dominio.Entidades.Servico", b =>
+                {
+                    b.Navigation("Itens");
                 });
 #pragma warning restore 612, 618
         }
