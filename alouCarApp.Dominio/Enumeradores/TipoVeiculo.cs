@@ -1,4 +1,4 @@
-namespace AlouCar.Dominio.Enumeradores // was: Enumaradores
+namespace AlouCar.Dominio.Enumeradores
 {
     public enum TipoVeiculo
     {

@@ -10,6 +10,6 @@ namespace alouCarApp.API.Models.IA
     {
         public string TipoServico { get; set; }
         public string Justificativa { get; set; }
-        public string Prioridade { get; set; } // "Alta", "Média", "Baixa"
+        public string Prioridade { get; set; }
     }
 }

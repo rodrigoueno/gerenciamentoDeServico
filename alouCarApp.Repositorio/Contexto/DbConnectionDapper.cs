@@ -4,15 +4,13 @@ using Microsoft.Extensions.Configuration;
 
 namespace AlouCar.Repositorio.Contexto
 {
-    public class DbConnectionFactory
+    public class DbConnectionDapper
     {
         private readonly string _connectionString;
 
-        public DbConnectionFactory(IConfiguration configuration)
+        public DbConnectionDapper(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection")
-                ?? throw new InvalidOperationException(
-                    "Connection string 'DefaultConnection' não encontrada no appsettings.");
+            _connectionString = configuration.GetConnectionString("DefaultConnection")?? throw new InvalidOperationException("Connection string não encontrada.");
         }
 
         public IDbConnection Create()

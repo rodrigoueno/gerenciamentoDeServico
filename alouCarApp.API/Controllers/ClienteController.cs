@@ -99,7 +99,7 @@ namespace alouCarApp.API.Controllers
                     Email = clienteAtualizar.Email,
                     Telefone = clienteAtualizar.Telefone
                 };
-                await _clienteAplicacao.Atualizar(clienteDominio); // ✅ await
+                await _clienteAplicacao.Atualizar(clienteDominio);
                 return Ok();
             }
             catch (Exception ex)

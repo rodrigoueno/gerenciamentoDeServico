@@ -21,23 +21,19 @@ namespace AlouCar.Aplicacao.Aplicacoes
         public async Task<int> Criar(Servico servico)
         {
             if (servico == null)
-            {
                 throw new Exception("Serviço não pode ser vazio");
-            }
+
             if (servico.Itens == null || !servico.Itens.Any())
-            {
                 throw new Exception("O serviço deve ter ao menos um item");
-            }
+
             if (servico.Itens.Any(i => i.Valor <= 0))
-            {
                 throw new Exception("Todos os itens devem ter valor maior que zero");
-            }
 
             servico.ValorPrevisto = servico.Itens.Sum(i => i.Valor);
 
             ValidarInformacaoServico(servico);
             await ValidarCliente(servico.ClienteId);
-            ValidarVeiculo(servico.VeiculoId, servico.ClienteId).Wait();
+            await ValidarVeiculo(servico.VeiculoId, servico.ClienteId);
 
             return _servicoRepositorio.Criar(servico);
         }
