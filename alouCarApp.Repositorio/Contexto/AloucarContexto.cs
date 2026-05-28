@@ -21,9 +21,10 @@ namespace AlouCar.Repositorio.Contexto
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (_options == null)
+            if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=NOTE291\\SQLEXPRESS;Database=AlouCar;Trusted_Connection=True;TrustServerCertificate=True;");
+                optionsBuilder.UseSqlServer(
+                    "Server=DESKTOP-07MR2BV\\SQLEXPRESS;Database=AlouCar;Trusted_Connection=True;TrustServerCertificate=True;");
             }
         }
 
