@@ -6,6 +6,7 @@ namespace AlouCar.Repositorio.Contexto
 {
     public class AlouCarContexto : DbContext
     {
+        private readonly DbContextOptions _options;
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Veiculo> Veiculos { get; set; }
         public DbSet<Servico> Servicos { get; set; }
@@ -13,13 +14,16 @@ namespace AlouCar.Repositorio.Contexto
 
         public AlouCarContexto() { }
 
-        public AlouCarContexto(DbContextOptions<AlouCarContexto> options) : base(options) { }
+        public AlouCarContexto(DbContextOptions<AlouCarContexto> options) : base(options)
+        {
+            _options = options;
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
+            if (_options == null)
             {
-                optionsBuilder.UseSqlServer("Server=DESKTOP-07MR2BV\\SQLEXPRESS;Database=AlouCar;Trusted_Connection=True;TrustServerCertificate=True;");
+                optionsBuilder.UseSqlServer("Server=NOTE291\\SQLEXPRESS;Database=AlouCar;Trusted_Connection=True;TrustServerCertificate=True;");
             }
         }
 

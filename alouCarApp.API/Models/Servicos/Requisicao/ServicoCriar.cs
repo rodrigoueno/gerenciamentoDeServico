@@ -7,7 +7,6 @@ namespace alouCarApp.API.Models.Servicos
         public DateTime DataAgendamento { get; set; }
         public string Observacao { get; set; }
 
-        // Lista de serviços solicitados — ValorPrevisto será calculado a partir daqui
         public List<ServicoItemCriar> Itens { get; set; } = new();
     }
 }

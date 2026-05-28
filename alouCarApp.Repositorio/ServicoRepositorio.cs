@@ -10,14 +10,13 @@ namespace AlouCar.Repositorio
     public class ServicoRepositorio : IServicoRepositorio
     {
         private readonly AlouCarContexto _contexto;
-        private readonly DbConnectionFactory _factory;
+        private readonly DbConnectionDapper _dapper;
 
-        public ServicoRepositorio(AlouCarContexto contexto, DbConnectionFactory factory)
+        public ServicoRepositorio(AlouCarContexto contexto, DbConnectionDapper factory)
         {
             _contexto = contexto;
-            _factory = factory;
+            _dapper = factory;
         }
-
 
 
         public int Criar(Servico servico)
@@ -36,9 +35,6 @@ namespace AlouCar.Repositorio
                 foreach (var item in servico.Itens)
                     _contexto.Entry(item).State = EntityState.Detached;
 
-
-
-            //_contexto.Servicos.Update(servico);
             _contexto.SaveChanges();
         }
 
@@ -57,82 +53,82 @@ namespace AlouCar.Repositorio
 
         public async Task<Servico> ObterPorId(int id)
         {
-            using var db = _factory.Create();
-            var lookup = new Dictionary<int, Servico>();
+            using var caminhoDapper = _dapper.Create();
+            var pesquisaServico = new Dictionary<int, Servico>();
 
-            await db.QueryAsync<Servico, Cliente, Veiculo, ServicoItem, Servico>(
+            await caminhoDapper.QueryAsync<Servico, Cliente, Veiculo, ServicoItem, Servico>(
                 "sp_Servico_Read",
                 (servico, cliente, veiculo, item) =>
                 {
-                    if (!lookup.TryGetValue(servico.Id, out var s))
+                    if (!pesquisaServico.TryGetValue(servico.Id, out var servicoObter))
                     {
-                        s = servico;
-                        s.Cliente = cliente;
-                        s.Veiculo = veiculo;
-                        s.Itens = new List<ServicoItem>();
-                        lookup[s.Id] = s;
+                        servicoObter = servico;
+                        servicoObter.Cliente = cliente;
+                        servicoObter.Veiculo = veiculo;
+                        servicoObter.Itens = new List<ServicoItem>();
+                        pesquisaServico[servicoObter.Id] = servicoObter;
                     }
-                    if (item != null) s.Itens.Add(item);
-                    return s;
+                    if (item != null) servicoObter.Itens.Add(item);
+                    return servicoObter;
                 },
                 new { Id = id },
                 splitOn: "ClienteId,VeiculoId,ItemId",
                 commandType: CommandType.StoredProcedure);
 
-            return lookup.Values.FirstOrDefault();
+            return pesquisaServico.Values.FirstOrDefault();
         }
 
         public async Task<List<Servico>> Listar(bool ativo)
         {
-            using var db = _factory.Create();
-            var lookup = new Dictionary<int, Servico>();
+            using var caminhoDapper = _dapper.Create();
+            var pesquisaServico = new Dictionary<int, Servico>();
 
-            await db.QueryAsync<Servico, Cliente, Veiculo, ServicoItem, Servico>(
+            await caminhoDapper.QueryAsync<Servico, Cliente, Veiculo, ServicoItem, Servico>(
                 "sp_Servico_Read",
                 (servico, cliente, veiculo, item) =>
                 {
-                    if (!lookup.TryGetValue(servico.Id, out var s))
+                    if (!pesquisaServico.TryGetValue(servico.Id, out var servicoListar))
                     {
-                        s = servico;
-                        s.Cliente = cliente;
-                        s.Veiculo = veiculo;
-                        s.Itens = new List<ServicoItem>();
-                        lookup[s.Id] = s;
+                        servicoListar = servico;
+                        servicoListar.Cliente = cliente;
+                        servicoListar.Veiculo = veiculo;
+                        servicoListar.Itens = new List<ServicoItem>();
+                        pesquisaServico[servicoListar.Id] = servicoListar;
                     }
-                    if (item != null) s.Itens.Add(item);
-                    return s;
+                    if (item != null) servicoListar.Itens.Add(item);
+                    return servicoListar;
                 },
                 new { Ativo = ativo },
                 splitOn: "ClienteId,VeiculoId,ItemId",
                 commandType: CommandType.StoredProcedure);
 
-            return lookup.Values.ToList();
+            return pesquisaServico.Values.ToList();
         }
 
         public async Task<List<Servico>> ListarPorCliente(int clienteId)
         {
-            using var db = _factory.Create();
-            var lookup = new Dictionary<int, Servico>();
+            using var caminhoDapper = _dapper.Create();
+            var pesquisaCliente = new Dictionary<int, Servico>();
 
-            await db.QueryAsync<Servico, Veiculo, ServicoItem, Servico>(
+            await caminhoDapper.QueryAsync<Servico, Veiculo, ServicoItem, Servico>(
                 "sp_Servico_ReadByCliente",
                 (servico, veiculo, item) =>
                 {
-                    if (!lookup.TryGetValue(servico.Id, out var s))
+                    if (!pesquisaCliente.TryGetValue(servico.Id, out var servicoListar))
                     {
-                        s = servico;
-                        s.Veiculo = veiculo;
-                        s.Itens = new List<ServicoItem>();
-                        lookup[s.Id] = s;
+                        servicoListar = servico;
+                        servicoListar.Veiculo = veiculo;
+                        servicoListar.Itens = new List<ServicoItem>();
+                        pesquisaCliente[servicoListar.Id] = servicoListar;
                     }
-                    if (item != null) s.Itens.Add(item);
-                    return s;
+                    if (item != null) servicoListar.Itens.Add(item);
+                    return servicoListar;
                 },
                 new { ClienteId = clienteId },
                 splitOn: "VeiculoId,ItemId",
                 commandType: CommandType.StoredProcedure);
 
-            return lookup.Values.ToList();
+            return pesquisaCliente.Values.ToList();
         }
     }
 }

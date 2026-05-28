@@ -23,31 +23,21 @@ namespace AlouCar.Aplicacao.Aplicacoes
             ValidarInformacaoCliente(cliente);
             return _clienteRepositorio.Criar(cliente);
         }
-        
+
         public async Task Atualizar(Cliente cliente)
         {
             var clienteAtualizar = await _clienteRepositorio.Obter(cliente.Id);
             if (clienteAtualizar == null)
                 throw new Exception("Cliente não encontrado");
 
-            if (!string.IsNullOrEmpty(cliente.Nome))
-            {
-                clienteAtualizar.Nome = cliente.Nome;
-            }
-            if (!string.IsNullOrEmpty(cliente.Cpf))
-            {
-                clienteAtualizar.Cpf = cliente.Cpf;
-            }
-            if (!string.IsNullOrEmpty(cliente.Email))
-            {
-                clienteAtualizar.Email = cliente.Email;
-            }
-            if (!string.IsNullOrEmpty(cliente.Telefone))
-            {
-                clienteAtualizar.Telefone = cliente.Telefone;
-            }
+            ValidarInformacaoCliente(cliente);
 
-            _clienteRepositorio.Atualizar(clienteAtualizar);
+            clienteAtualizar.Nome = cliente.Nome;
+            clienteAtualizar.Cpf = cliente.Cpf;
+            clienteAtualizar.Email = cliente.Email;
+            clienteAtualizar.Telefone = cliente.Telefone;
+
+            await _clienteRepositorio.Atualizar(clienteAtualizar);
         }
 
         public async Task<Cliente> ObterPorId(int id)

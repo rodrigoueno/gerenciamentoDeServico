@@ -10,12 +10,12 @@ namespace AlouCar.Repositorio
     public class ClienteRepositorio : IClienteRepositorio
     {
         private readonly AlouCarContexto _contexto;
-        private readonly DbConnectionFactory _factory;
+        private readonly DbConnectionDapper _dapper;
 
-        public ClienteRepositorio(AlouCarContexto contexto, DbConnectionFactory factory)
+        public ClienteRepositorio(AlouCarContexto contexto, DbConnectionDapper factory)
         {
             _contexto = contexto;
-            _factory = factory;
+            _dapper = factory;
         }
 
 
@@ -29,7 +29,7 @@ namespace AlouCar.Repositorio
         public async Task Atualizar(Cliente cliente)
         {
             _contexto.Clientes.Update(cliente);
-            _contexto.SaveChanges();
+            await _contexto.SaveChangesAsync();
         }
 
         public async Task<bool> Excluir(Cliente cliente)
@@ -42,8 +42,8 @@ namespace AlouCar.Repositorio
 
         public async Task<Cliente> Obter(int id)
         {
-            using var db = _factory.Create();
-            return await db.QueryFirstOrDefaultAsync<Cliente>(
+            using var caminhoDapper = _dapper.Create();
+            return await caminhoDapper.QueryFirstOrDefaultAsync<Cliente>(
                 "sp_Cliente_Read",
                 new { Id = id },
                 commandType: CommandType.StoredProcedure);
@@ -51,8 +51,8 @@ namespace AlouCar.Repositorio
 
         public async Task<List<Cliente>> Listar(bool ativo)
         {
-            using var db = _factory.Create();
-            var resultado = await db.QueryAsync<Cliente>(
+            using var CaminhoDapper = _dapper.Create();
+            var resultado = await CaminhoDapper.QueryAsync<Cliente>(
                 "sp_Cliente_Read",
                 new { Ativo = ativo },
                 commandType: CommandType.StoredProcedure);

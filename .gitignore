@@ -6,7 +6,6 @@ obj/
 out/
 publish/
 artifacts/
-appsettings.json
 
 ############################################
 # Visual Studio
@@ -16,7 +15,6 @@ appsettings.json
 *.suo
 *.userosscache
 *.sln.docstates
-appsettings.json
 
 ############################################
 # JetBrains Rider
@@ -66,15 +64,12 @@ yarn-error.log*
 *.nupkg
 .nuget/packages/
 packages/
-packages.lock.json
 
 ############################################
 # Environment Variables
 ############################################
 .env
 .env.*
-appsettings.Development.json
-appsettings.Local.json
 
 ############################################
 # Publish Profiles
@@ -122,8 +117,3 @@ Thumbs.db
 ############################################
 coverage/
 coverage-report/
-
-############################################
-# Secrets
-############################################
-secrets.json

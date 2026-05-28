@@ -10,12 +10,12 @@ namespace AlouCar.Repositorio
     public class VeiculoRepositorio : IVeiculoRepositorio
     {
         private readonly AlouCarContexto _contexto;
-        private readonly DbConnectionFactory _factory;
+        private readonly DbConnectionDapper _dapper;
 
-        public VeiculoRepositorio(AlouCarContexto contexto, DbConnectionFactory factory)
+        public VeiculoRepositorio(AlouCarContexto contexto, DbConnectionDapper dapper)
         {
             _contexto = contexto;
-            _factory  = factory;
+            _dapper  = dapper;
         }
 
         // ── ESCRITA (Entity Framework) ────────────────────────────────────────
@@ -41,12 +41,10 @@ namespace AlouCar.Repositorio
             return true;
         }
 
-        // ── LEITURA (Dapper + Stored Procedures) ─────────────────────────────
-
         public async Task<Veiculo> ObterPorId(int id)
         {
-            using var db = _factory.Create();
-            return await db.QueryFirstOrDefaultAsync<Veiculo>(
+            using var caminhoDapper = _dapper.Create();
+            return await caminhoDapper.QueryFirstOrDefaultAsync<Veiculo>(
                 "sp_Veiculo_Read",
                 new { Id = id },
                 commandType: CommandType.StoredProcedure);
@@ -54,8 +52,8 @@ namespace AlouCar.Repositorio
 
         public async Task<List<Veiculo>> Listar(bool ativo)
         {
-            using var db = _factory.Create();
-            var resultado = await db.QueryAsync<Veiculo>(
+            using var caminhoDapper = _dapper.Create();
+            var resultado = await caminhoDapper.QueryAsync<Veiculo>(
                 "sp_Veiculo_Read",
                 new { Ativo = ativo },
                 commandType: CommandType.StoredProcedure);
@@ -64,8 +62,8 @@ namespace AlouCar.Repositorio
 
         public async Task<List<Veiculo>> ListarPorCliente(int clienteId)
         {
-            using var db = _factory.Create();
-            var resultado = await db.QueryAsync<Veiculo>(
+            using var caminhoDapper = _dapper.Create();
+            var resultado = await caminhoDapper.QueryAsync<Veiculo>(
                 "sp_Veiculo_ReadByCliente",
                 new { ClienteId = clienteId },
                 commandType: CommandType.StoredProcedure);
