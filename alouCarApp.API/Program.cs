@@ -14,7 +14,7 @@ builder.Services.AddScoped<IVeiculoAplicacao, VeiculoAplicacao>();
 builder.Services.AddScoped<IServicoAplicacao, ServicoAplicacao>();
 
 // Repositorio
-builder.Services.AddSingleton<DbConnectionFactory>();
+builder.Services.AddSingleton<DbConnectionDapper>();
 builder.Services.AddScoped<IClienteRepositorio, ClienteRepositorio>();
 builder.Services.AddScoped<IVeiculoRepositorio, VeiculoRepositorio>();
 builder.Services.AddScoped<IServicoRepositorio, ServicoRepositorio>();
