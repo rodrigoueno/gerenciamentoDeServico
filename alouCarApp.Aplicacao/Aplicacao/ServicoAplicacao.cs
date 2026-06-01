@@ -35,7 +35,24 @@ namespace AlouCar.Aplicacao.Aplicacoes
             await ValidarCliente(servico.ClienteId);
             await ValidarVeiculo(servico.VeiculoId, servico.ClienteId);
 
-            return _servicoRepositorio.Criar(servico);
+            var servicoId = _servicoRepositorio.Criar(servico);
+
+            // Atualiza quilometragem do veículo com o KM informado nos itens
+            var kmNaRevisao = servico.Itens
+                .FirstOrDefault(i => i.KilometragemNaRevisao.HasValue)
+                ?.KilometragemNaRevisao;
+
+            if (kmNaRevisao.HasValue && kmNaRevisao.Value > 0)
+            {
+                var veiculo = await _veiculoRepositorio.ObterPorId(servico.VeiculoId);
+                if (veiculo != null && kmNaRevisao.Value > veiculo.Quilometragem)
+                {
+                    veiculo.Quilometragem = kmNaRevisao.Value;
+                    _veiculoRepositorio.Atualizar(veiculo);
+                }
+            }
+
+            return servicoId;
         }
 
         public async Task Atualizar(Servico servico)
@@ -43,29 +60,22 @@ namespace AlouCar.Aplicacao.Aplicacoes
             var servicoAtualizar = await _servicoRepositorio.ObterPorId(servico.Id);
 
             if (servicoAtualizar == null)
-            {
                 throw new Exception("Serviço não encontrado");
-            }
+
             if (servico.DataAgendamento != default)
-            {
                 servicoAtualizar.DataAgendamento = servico.DataAgendamento;
-            }
+
             if (servico.ValorTotal > 0)
-            {
                 servicoAtualizar.ValorTotal = servico.ValorTotal;
-            }
+
             if (!string.IsNullOrEmpty(servico.Observacao))
-            {
                 servicoAtualizar.Observacao = servico.Observacao;
-            }
+
             if (servico.Situacao != default)
-            {
                 servicoAtualizar.Situacao = servico.Situacao;
-            }
+
             if (servico.Situacao == SituacaoServico.Concluido)
-            {
                 servicoAtualizar.Concluir();
-            }
 
             _servicoRepositorio.Atualizar(servicoAtualizar);
         }
@@ -74,9 +84,8 @@ namespace AlouCar.Aplicacao.Aplicacoes
         {
             var servicoObter = await _servicoRepositorio.ObterPorId(id);
             if (servicoObter == null)
-            {
                 throw new Exception("Serviço não encontrado");
-            }
+
             return servicoObter;
         }
 
@@ -93,9 +102,7 @@ namespace AlouCar.Aplicacao.Aplicacoes
         public async Task<bool> Excluir(Servico servico)
         {
             if (servico == null)
-            {
                 throw new Exception("Serviço não encontrado");
-            }
 
             return await _servicoRepositorio.Excluir(servico);
         }
@@ -106,6 +113,7 @@ namespace AlouCar.Aplicacao.Aplicacoes
 
             if (servicoSituacao == null)
                 throw new Exception("Serviço não encontrado");
+
             switch (situacao)
             {
                 case SituacaoServico.EmAndamento:
@@ -122,6 +130,7 @@ namespace AlouCar.Aplicacao.Aplicacoes
                 default:
                     throw new Exception($"Situação '{situacao}' inválida para atualização");
             }
+
             _servicoRepositorio.Atualizar(servicoSituacao);
         }
 
@@ -129,43 +138,33 @@ namespace AlouCar.Aplicacao.Aplicacoes
         public static void ValidarInformacaoServico(Servico servico)
         {
             if (servico.DataAgendamento == default)
-            {
                 throw new Exception("A data não pode ser vazia!");
-            }
+
             if (servico.ValorPrevisto <= 0)
-            {
                 throw new Exception("O valor deve ser maior que zero!");
-            }
         }
 
         public async Task ValidarCliente(int clienteId)
         {
             var cliente = await _clienteRepositorio.Obter(clienteId);
             if (cliente == null)
-            {
                 throw new Exception($"Cliente {clienteId} não encontrado");
-            }
+
             if (!cliente.Ativo)
-            {
                 throw new Exception($"Cliente {clienteId} está inativo");
-            }
         }
 
         public async Task ValidarVeiculo(int veiculoId, int clienteId)
         {
             var veiculo = await _veiculoRepositorio.ObterPorId(veiculoId);
             if (veiculo == null)
-            {
                 throw new Exception($"Veículo {veiculoId} não encontrado");
-            }
+
             if (!veiculo.Ativo)
-            {
                 throw new Exception($"Veículo {veiculoId} está inativo");
-            }
+
             if (veiculo.ClienteId != clienteId)
-            {
                 throw new Exception($"Veículo {veiculoId} não pertence ao cliente {clienteId}");
-            }
         }
         #endregion
     }
