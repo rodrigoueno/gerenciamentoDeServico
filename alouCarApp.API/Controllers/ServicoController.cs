@@ -31,7 +31,8 @@ namespace alouCarApp.API.Controllers
                     Itens = servicoCriar.Itens.Select(i => new ServicoItem
                     {
                         TipoServico = i.TipoServico,
-                        Valor = i.Valor
+                        Valor = i.Valor,
+                        KilometragemNaRevisao = i.KilometragemNaRevisao
                     }).ToList()
                 };
 

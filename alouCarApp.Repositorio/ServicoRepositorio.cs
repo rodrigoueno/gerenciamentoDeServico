@@ -21,6 +21,12 @@ namespace AlouCar.Repositorio
 
         public int Criar(Servico servico)
         {
+            // Garante que os itens estão vinculados à entidade pai
+            foreach (var item in servico.Itens)
+            {
+                item.Servico = servico; // vínculo explícito
+            }
+
             _contexto.Servicos.Add(servico);
             _contexto.SaveChanges();
             return servico.Id;
@@ -28,12 +34,17 @@ namespace AlouCar.Repositorio
 
         public void Atualizar(Servico servico)
         {
-            _contexto.Entry(servico).State = EntityState.Modified;
-            if (servico.Cliente != null)
-                _contexto.Entry(servico.Cliente).State = EntityState.Detached;
-            if (servico.Itens != null)
-                foreach (var item in servico.Itens)
-                    _contexto.Entry(item).State = EntityState.Detached;
+            var servicoExistente = _contexto.Servicos.Find(servico.Id);
+
+            if (servicoExistente == null)
+                throw new Exception("Serviço não encontrado");
+
+            // Atualiza apenas os campos necessários
+            servicoExistente.DataAgendamento = servico.DataAgendamento;
+            servicoExistente.ValorTotal = servico.ValorTotal;
+            servicoExistente.Observacao = servico.Observacao;
+            servicoExistente.Situacao = servico.Situacao;
+            servicoExistente.DataConclusao = servico.DataConclusao;
 
             _contexto.SaveChanges();
         }

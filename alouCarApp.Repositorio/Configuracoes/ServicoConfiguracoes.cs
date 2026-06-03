@@ -31,6 +31,11 @@ namespace AlouCar.Repositorio.Configuracoes
                    .WithMany()
                    .HasForeignKey(s => s.VeiculoId)
                    .OnDelete(DeleteBehavior.Restrict);
+            
+            builder.HasMany(s => s.Itens)
+                   .WithOne(i => i.Servico)
+                   .HasForeignKey(i => i.ServicoId)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

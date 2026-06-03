@@ -6,5 +6,6 @@ namespace alouCarApp.API.Models.Servicos
     {
         public TipoServico TipoServico { get; set; }
         public decimal Valor { get; set; }
+        public int KilometragemNaRevisao { get; set; }
     }
 }

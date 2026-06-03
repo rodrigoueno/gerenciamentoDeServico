@@ -24,7 +24,7 @@ namespace AlouCar.Repositorio.Contexto
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer(
-                    "Server=DESKTOP-07MR2BV\\SQLEXPRESS;Database=AlouCar;Trusted_Connection=True;TrustServerCertificate=True;");
+                    "Server=NOTE291\\SQLEXPRESS;Database=AlouCar;Trusted_Connection=True;TrustServerCertificate=True;");
             }
         }
 
